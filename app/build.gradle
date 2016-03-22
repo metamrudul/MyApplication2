@@ -1,3 +1,6 @@
+def releaseNotes = 'git log --pretty=format:"%s" --since "yesterday"'.execute([], project.rootDir).text.trim()
+// = "git log --graph --pretty=format:'%h -%d %s <%an>' --abbrev-commit #{HEAD^^^^^}..HEAD".execute([],project.rootDir).text.trim()
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -28,7 +31,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug{
-
+            println("Proj Dir::"+project.rootDir+"::ProjDir::"+projectDir);
+            //println("Notes:"+releaseNotes.execute([],project.rootDir).text)
+            println("Notes2:"+releaseNotes)
+            ext.betaDistributionReleaseNotes=releaseNotes
+            //ext.betaDistributionEmails="mrudul.pendharkar@hubchat.com"
+            ext.betaDistributionGroupAliases="Hubchatters"
         }
     }
 }
