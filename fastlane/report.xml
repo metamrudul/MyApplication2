@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+      
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.000554">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000252">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: gradle" time="6.380853">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: Switch to android publish_crashlytics lane" time="0.000303">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: git log --graph --pretty=format:'%h -%d %s &lt;%an&gt;' --abbrev-commit #{HEAD^^^^^}..HEAD" time="0.009111">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: crashlytics" time="9.083352">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

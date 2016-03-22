@@ -1,0 +1,91 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/docs
+# All available actions: https://github.com/fastlane/fastlane/blob/master/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# By default, fastlane will send which actions are used
+# No personal data is shared, more information on https://github.com/fastlane/enhancer
+# Uncomment the following line to opt out
+# opt_out_usage
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.66.0"
+
+default_platform :android
+
+platform :android do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  # Publish to Crashlytics
+  private_lane :publish_crashlytics do |options|
+
+    # Generate a changelog with GIT since the last successful build in Jenkins
+    changelog = sh("git log --graph --pretty=format:'%h -%d %s <%an>' --abbrev-commit #{'#{HEAD^^^^^}'}..HEAD")
+    print changelog
+
+    # Increment the version number of your Xcode project
+    #version = increment_version_number(bump_type: "patch")
+    # Send the app to Hockeyapp (fill in your API token!)
+    crashlytics(
+      api_token: "63eafe5244967175de6fd04384ff1d312495be7b",
+      build_secret: "7e8efed3e155cbddeb61867ebc0ad2ce2d589c55f46c3f59527a35a90791d1ab",
+      notes: "#{changelog.to_s}",
+      #emails: ["mrudul.pendharkar@hubchat.com"],
+      groups: ["Hubchatters"],
+      notifications: "YES",
+      #release_type: options[:release_type]
+    )
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "assembleDebug")
+    #gradle(task: "crashlyticsUploadDistributionDebug")
+    #crashlytics
+    publish_crashlytics
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "assembleRelease")
+    supply
+  end
+
+  # You can define as many lanes as you want
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/docs/Platforms.md
+# All available actions: https://github.com/fastlane/fastlane/blob/master/docs/Actions.md
